@@ -8,8 +8,9 @@ from app import create_app
 app = create_app('production')
 
 # Initialize database if needed
-from app import create_tables_and_seed
-create_tables_and_seed()
+with app.app_context():
+    from app import create_tables_and_seed
+    create_tables_and_seed()
 
 if __name__ == "__main__":
     app.run()
