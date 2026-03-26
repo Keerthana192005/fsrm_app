@@ -642,7 +642,7 @@ def update_order_status(order_id):
     flash(f'Order {order_id} marked as completed!', 'success')
     return redirect(url_for('admin_dashboard'))
 
-@app.before_first_request
+@app.before_request
 def initialize_database():
     """Initialize database tables and seed data on first request"""
     try:
