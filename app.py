@@ -422,6 +422,39 @@ def admin_change_password():
     
     return render_template('admin_change_password.html')
 
+@app.route('/admin/change_username', methods=['POST'])
+def change_username():
+    try:
+        data = request.get_json()
+        current_password = data.get('current_password')
+        new_username = data.get('new_username')
+        
+        if not current_password or not new_username:
+            return jsonify({'success': False, 'error': 'Missing required fields'})
+        
+        # Get the admin user (assuming there's only one admin)
+        admin = Admin.query.first()
+        if not admin:
+            return jsonify({'success': False, 'error': 'Admin not found'})
+        
+        # Verify current password
+        if not admin.check_password(current_password):
+            return jsonify({'success': False, 'error': 'Current password is incorrect'})
+        
+        # Check if new username already exists
+        existing_admin = Admin.query.filter_by(username=new_username).first()
+        if existing_admin and existing_admin.id != admin.id:
+            return jsonify({'success': False, 'error': 'Username already exists'})
+        
+        # Update username
+        admin.username = new_username
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Username changed successfully'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': 'Failed to change username'})
+
 @app.route('/admin/logout')
 @login_required
 def admin_logout():
@@ -534,6 +567,71 @@ def delete_product(veg_id):
     db.session.commit()
     flash(f'{vegetable.name} deleted successfully!', 'success')
     return redirect(url_for('admin_products'))
+
+@app.route('/admin/reports')
+@login_required
+def admin_reports():
+    try:
+        # Get report data
+        total_orders = Order.query.count()
+        completed_orders = Order.query.filter_by(status='completed').count()
+        pending_orders = Order.query.filter_by(status='pending').count()
+        total_revenue = db.session.query(db.func.sum(Order.total)).filter_by(status='completed').scalar() or 0
+        total_customers = db.session.query(db.func.count(db.func.distinct(Order.customer_name))).scalar() or 0
+        
+        # Get monthly sales data
+        monthly_sales = db.session.query(
+            db.func.date_trunc('month', Order.date).label('month'),
+            db.func.sum(Order.total).label('revenue'),
+            db.func.count(Order.id).label('orders')
+        ).group_by(db.func.date_trunc('month', Order.date)).order_by(db.func.date_trunc('month', Order.date).desc()).limit(6).all()
+        
+        # Get top selling products
+        top_products = db.session.query(
+            Vegetable.name,
+            db.func.sum(OrderItem.quantity).label('total_sold')
+        ).join(OrderItem).group_by(Vegetable.name).order_by(db.func.sum(OrderItem.quantity).desc()).limit(5).all()
+        
+    except Exception as e:
+        print(f"Error generating reports: {e}")
+        total_orders = completed_orders = pending_orders = 0
+        total_revenue = total_customers = 0
+        monthly_sales = []
+        top_products = []
+    
+    return render_template('admin_reports.html', 
+                         total_orders=total_orders,
+                         completed_orders=completed_orders,
+                         pending_orders=pending_orders,
+                         total_revenue=total_revenue,
+                         total_customers=total_customers,
+                         monthly_sales=monthly_sales,
+                         top_products=top_products)
+
+@app.route('/admin/customers')
+@login_required
+def admin_customers():
+    try:
+        # Get unique customers with their order details
+        customers = db.session.query(
+            Order.customer_name,
+            Order.phone,
+            Order.address,
+            Order.email,
+            db.func.count(Order.id).label('order_count'),
+            db.func.sum(Order.total).label('total_spent'),
+            db.func.max(Order.date).label('last_order')
+        ).group_by(Order.customer_name, Order.phone, Order.address, Order.email).order_by(db.func.max(Order.date).desc()).all()
+    except Exception as e:
+        print(f"Error fetching customers: {e}")
+        customers = []
+    
+    return render_template('admin_customers.html', customers=customers)
+
+@app.route('/admin/settings')
+@login_required
+def admin_settings():
+    return render_template('admin_settings.html')
 
 @app.route('/admin/update_order_status/<int:order_id>')
 @login_required

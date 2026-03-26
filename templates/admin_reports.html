@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Admin Dashboard - Campus Krishi{% endblock %}
+{% block title %}Reports - Campus Krishi{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -12,13 +12,13 @@
                     <i class="fas fa-seedling"></i> Campus Krishi
                 </h4>
                 <nav class="nav flex-column">
-                    <a href="{{ url_for('admin_dashboard') }}" class="nav-link active">
+                    <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                     <a href="{{ url_for('admin_products') }}" class="nav-link">
                         <i class="fas fa-box"></i> Products
                     </a>
-                    <a href="{{ url_for('admin_reports') }}" class="nav-link">
+                    <a href="{{ url_for('admin_reports') }}" class="nav-link active">
                         <i class="fas fa-chart-bar"></i> Reports
                     </a>
                     <a href="{{ url_for('admin_customers') }}" class="nav-link">
@@ -40,19 +40,27 @@
         <!-- Main Content -->
         <div class="col-md-9 main-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Admin Dashboard</h2>
+                <h2>Sales Reports</h2>
                 <div>
                     <span class="badge bg-success">Welcome, {{ current_user.username }}</span>
                 </div>
             </div>
             
-            <!-- Statistics Cards -->
+            <!-- Overview Cards -->
             <div class="row mb-4">
                 <div class="col-md-3">
                     <div class="card stat-card">
                         <div class="card-body">
                             <h5 class="card-title text-primary">{{ total_orders }}</h5>
                             <p class="card-text">Total Orders</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">{{ completed_orders }}</h5>
+                            <p class="card-text">Completed Orders</p>
                         </div>
                     </div>
                 </div>
@@ -67,61 +75,74 @@
                 <div class="col-md-3">
                     <div class="card stat-card">
                         <div class="card-body">
-                            <h5 class="card-title text-success">{{ total_vegetables }}</h5>
-                            <p class="card-text">Products</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card stat-card">
-                        <div class="card-body">
-                            <h5 class="card-title text-info">{{ feedbacks|length }}</h5>
-                            <p class="card-text">Feedbacks</p>
+                            <h5 class="card-title text-info">₹{{ "%.2f"|format(total_revenue) }}</h5>
+                            <p class="card-text">Total Revenue</p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Recent Orders -->
-            <div class="card">
+            <!-- Monthly Sales -->
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Orders</h5>
+                    <h5 class="card-title mb-0">Monthly Sales</h5>
                 </div>
                 <div class="card-body">
+                    {% if monthly_sales %}
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Total</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Month</th>
+                                    <th>Orders</th>
+                                    <th>Revenue</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for order in orders[:10] %}
+                                {% for sale in monthly_sales %}
                                 <tr>
-                                    <td>#{{ order.id }}</td>
-                                    <td>{{ order.customer_name }}</td>
-                                    <td>₹{{ "%.2f"|format(order.total) }}</td>
-                                    <td>{{ order.date.strftime('%Y-%m-%d') }}</td>
-                                    <td>
-                                        <span class="badge bg-warning">{{ order.status or 'pending' }}</span>
-                                    </td>
-                                    <td>
-                                        <a href="{{ url_for('update_order_status', order_id=order.id) }}" 
-                                           class="btn btn-sm btn-success"
-                                           onclick="return confirm('Mark this order as completed?')">
-                                            <i class="fas fa-check"></i> Complete
-                                        </a>
-                                    </td>
+                                    <td>{{ sale.month.strftime('%B %Y') }}</td>
+                                    <td>{{ sale.orders }}</td>
+                                    <td>₹{{ "%.2f"|format(sale.revenue) }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    {% else %}
+                    <p class="text-muted">No sales data available.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Top Products -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Top Selling Products</h5>
+                </div>
+                <div class="card-body">
+                    {% if top_products %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Total Sold (kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in top_products %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.total_sold }}kg</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No product sales data available.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

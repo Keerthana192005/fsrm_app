@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Admin Dashboard - Campus Krishi{% endblock %}
+{% block title %}Customers - Campus Krishi{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -12,7 +12,7 @@
                     <i class="fas fa-seedling"></i> Campus Krishi
                 </h4>
                 <nav class="nav flex-column">
-                    <a href="{{ url_for('admin_dashboard') }}" class="nav-link active">
+                    <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                     <a href="{{ url_for('admin_products') }}" class="nav-link">
@@ -21,7 +21,7 @@
                     <a href="{{ url_for('admin_reports') }}" class="nav-link">
                         <i class="fas fa-chart-bar"></i> Reports
                     </a>
-                    <a href="{{ url_for('admin_customers') }}" class="nav-link">
+                    <a href="{{ url_for('admin_customers') }}" class="nav-link active">
                         <i class="fas fa-users"></i> Customers
                     </a>
                     <a href="{{ url_for('admin_settings') }}" class="nav-link">
@@ -40,88 +40,95 @@
         <!-- Main Content -->
         <div class="col-md-9 main-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Admin Dashboard</h2>
+                <h2>Customer Management</h2>
                 <div>
                     <span class="badge bg-success">Welcome, {{ current_user.username }}</span>
                 </div>
             </div>
             
-            <!-- Statistics Cards -->
+            <!-- Customer Statistics -->
             <div class="row mb-4">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card stat-card">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">{{ total_orders }}</h5>
-                            <p class="card-text">Total Orders</p>
+                            <h5 class="card-title text-primary">{{ customers|length }}</h5>
+                            <p class="card-text">Total Customers</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card stat-card">
                         <div class="card-body">
-                            <h5 class="card-title text-warning">{{ pending_orders }}</h5>
-                            <p class="card-text">Pending Orders</p>
+                            <h5 class="card-title text-success">{{ customers|length }}</h5>
+                            <p class="card-text">Active Customers</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card stat-card">
                         <div class="card-body">
-                            <h5 class="card-title text-success">{{ total_vegetables }}</h5>
-                            <p class="card-text">Products</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card stat-card">
-                        <div class="card-body">
-                            <h5 class="card-title text-info">{{ feedbacks|length }}</h5>
-                            <p class="card-text">Feedbacks</p>
+                            <h5 class="card-title text-info">
+                                ₹{{ "%.0f"|format(customers|sum(attribute='total_spent') if customers else 0) }}
+                            </h5>
+                            <p class="card-text">Total Revenue</p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Recent Orders -->
+            <!-- Customer List -->
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Orders</h5>
+                    <h5 class="card-title mb-0">Customer Details</h5>
                 </div>
                 <div class="card-body">
+                    {% if customers %}
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Total</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Customer Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Orders</th>
+                                    <th>Total Spent</th>
+                                    <th>Last Order</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for order in orders[:10] %}
+                                {% for customer in customers %}
                                 <tr>
-                                    <td>#{{ order.id }}</td>
-                                    <td>{{ order.customer_name }}</td>
-                                    <td>₹{{ "%.2f"|format(order.total) }}</td>
-                                    <td>{{ order.date.strftime('%Y-%m-%d') }}</td>
                                     <td>
-                                        <span class="badge bg-warning">{{ order.status or 'pending' }}</span>
+                                        <strong>{{ customer.customer_name }}</strong><br>
+                                        <small class="text-muted">{{ customer.address[:50] }}{% if customer.address|length > 50 %}...{% endif %}</small>
+                                    </td>
+                                    <td>{{ customer.phone }}</td>
+                                    <td>{{ customer.email or 'N/A' }}</td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ customer.order_count }}</span>
                                     </td>
                                     <td>
-                                        <a href="{{ url_for('update_order_status', order_id=order.id) }}" 
-                                           class="btn btn-sm btn-success"
-                                           onclick="return confirm('Mark this order as completed?')">
-                                            <i class="fas fa-check"></i> Complete
-                                        </a>
+                                        <strong>₹{{ "%.2f"|format(customer.total_spent) }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if customer.last_order %}
+                                            <small>{{ customer.last_order.strftime('%d-%m-%Y') }}</small>
+                                        {% else %}
+                                            <small class="text-muted">N/A</small>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-4x text-muted mb-3"></i>
+                        <h5>No Customers Found</h5>
+                        <p class="text-muted">No customer data available yet.</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
