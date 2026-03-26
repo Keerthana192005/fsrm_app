@@ -642,9 +642,16 @@ def update_order_status(order_id):
     flash(f'Order {order_id} marked as completed!', 'success')
     return redirect(url_for('admin_dashboard'))
 
+# Database initialization flag
+_db_initialized = False
+
 @app.before_request
 def initialize_database():
     """Initialize database tables and seed data on first request"""
+    global _db_initialized
+    if _db_initialized:
+        return
+        
     try:
         # Create tables
         db.create_all()
@@ -682,6 +689,8 @@ def initialize_database():
     except Exception as e:
         print(f"Database initialization error: {e}")
         db.session.rollback()
+    finally:
+        _db_initialized = True
 
 # Make the function available at module level for backward compatibility
 def create_tables_and_seed(app_instance):
