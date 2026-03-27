@@ -29,12 +29,27 @@ login_manager.login_view = 'admin_login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Admin.query.get(int(user_id))
+    try:
+        return Admin.query.get(int(user_id))
+    except:
+        return None
 
 @app.route('/')
 def home():
-    vegetables = Vegetable.query.filter(Vegetable.stock > 0).all()
-    return render_template('home.html', vegetables=vegetables)
+    try:
+        vegetables = Vegetable.query.filter(Vegetable.stock > 0).all()
+        return render_template('home.html', vegetables=vegetables)
+    except Exception as e:
+        # Database tables don't exist yet, show setup message
+        return '''
+        <div style="text-align: center; padding: 50px; font-family: Arial;">
+            <h1>🌱 Campus Krishi Farm Store</h1>
+            <p>Database needs to be set up first!</p>
+            <a href="/setup" style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                Setup Database
+            </a>
+        </div>
+        '''
 
 @app.route('/about')
 def about():
