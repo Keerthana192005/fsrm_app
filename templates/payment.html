@@ -70,40 +70,26 @@
         </div>
     </div>
 
-    <!-- Payment Methods -->
+    <!-- Order Confirmed -->
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Select Payment Method</h5>
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Order Confirmed</h5>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('process_payment', order_id=order.id) }}">
-                        <div class="row justify-content-center">
-                            <!-- PhonePe -->
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100 border-success">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
-                                        <h6>PhonePe</h6>
-                                        <p class="small text-muted">UPI Payment</p>
-                                        <a href="upi://pay?pa=7349784480@ibl&pn=SUMARAJ&mc=0000&mode=02&purpose=00&am={{ cart_total|round|int }}&cu=INR" 
-                                           class="btn btn-success" 
-                                           onclick="window.open(this.href, '_blank'); return false;">
-                                            Pay Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Back to Cart -->
-                        <div class="text-center mt-3">
-                            <a href="{{ url_for('cart') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Cart
-                            </a>
-                        </div>
-                    </form>
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                    <h4>Thank You for Your Order!</h4>
+                    <p class="text-muted">Your order has been placed successfully. We will contact you soon for delivery details.</p>
+                    
+                    <div class="mt-4">
+                        <a href="{{ url_for('home') }}" class="btn btn-success btn-lg">
+                            <i class="fas fa-home"></i> Continue Shopping
+                        </a>
+                        <a href="{{ url_for('cart') }}" class="btn btn-outline-secondary btn-lg ms-2">
+                            <i class="fas fa-shopping-cart"></i> View Cart
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

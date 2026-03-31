@@ -1,0 +1,229 @@
+{% extends "layout.html" %}
+
+{% block title %}Settings - Campus Krishi{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 sidebar p-0">
+            <div class="p-4">
+                <h4 class="text-white mb-4">
+                    <i class="fas fa-seedling"></i> Campus Krishi
+                </h4>
+                <nav class="nav flex-column">
+                    <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('admin_products') }}" class="nav-link">
+                        <i class="fas fa-box"></i> Products
+                    </a>
+                    <a href="{{ url_for('admin_reports') }}" class="nav-link">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </a>
+                    <a href="{{ url_for('admin_customers') }}" class="nav-link">
+                        <i class="fas fa-users"></i> Customers
+                    </a>
+                    <a href="{{ url_for('admin_settings') }}" class="nav-link active">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a href="{{ url_for('admin_change_password') }}" class="nav-link">
+                        <i class="fas fa-key"></i> Change Password
+                    </a>
+                    <a href="{{ url_for('admin_logout') }}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9 main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>System Settings</h2>
+                <div>
+                    <span class="badge bg-success">Welcome, {{ current_user.username }}</span>
+                </div>
+            </div>
+            
+            <!-- General Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">General Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="siteName" class="form-label">Site Name</label>
+                                    <input type="text" class="form-control" id="siteName" value="Campus Krishi">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="siteEmail" class="form-label">Site Email</label>
+                                    <input type="email" class="form-control" id="siteEmail" value="admin@campuskrishi.com">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="siteDescription" class="form-label">Site Description</label>
+                            <textarea class="form-control" id="siteDescription" rows="3">Fresh vegetables delivered directly from our farm to your campus</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save Settings</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Order Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Order Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="deliveryFee" class="form-label">Delivery Fee (₹)</label>
+                                    <input type="number" class="form-control" id="deliveryFee" value="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="minOrder" class="form-label">Minimum Order (₹)</label>
+                                    <input type="number" class="form-control" id="minOrder" value="100" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="deliveryTime" class="form-label">Delivery Time (hours)</label>
+                                    <input type="number" class="form-control" id="deliveryTime" value="4" step="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="freeDelivery" checked>
+                                <label class="form-check-label" for="freeDelivery">
+                                    Enable Free Delivery
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sameDayDelivery" checked>
+                                <label class="form-check-label" for="sameDayDelivery">
+                                    Enable Same Day Delivery
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save Order Settings</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Notification Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Notification Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="orderNotifications" checked>
+                                <label class="form-check-label" for="orderNotifications">
+                                    Enable Order Notifications
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="customerEmails" checked>
+                                <label class="form-check-label" for="customerEmails">
+                                    Send Order Confirmation Emails
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="adminAlerts" checked>
+                                <label class="form-check-label" for="adminAlerts">
+                                    Enable Admin Alerts for New Orders
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save Notification Settings</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- System Information -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">System Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Application Version:</strong></td>
+                                    <td>1.0.0</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Database:</strong></td>
+                                    <td>SQLite</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Flask Version:</strong></td>
+                                    <td>2.3.3</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Last Backup:</strong></td>
+                                    <td>Never</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Storage Used:</strong></td>
+                                    <td>2.5 MB</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Uptime:</strong></td>
+                                    <td>24 hours</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    min-height: 100vh;
+    color: white;
+}
+.sidebar .nav-link {
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 2px 0;
+}
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: rgba(255,255,255,0.1);
+}
+.main-content {
+    padding: 2rem;
+}
+</style>
+{% endblock %}
