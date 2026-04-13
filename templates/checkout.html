@@ -40,19 +40,15 @@
                                       placeholder="Enter your complete delivery address including landmark"></textarea>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="delivery_time" class="form-label">Preferred Delivery Date & Time *</label>
+                            <input type="datetime-local" class="form-control" id="delivery_time" name="delivery_time" required>
+                        </div>
+
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label for="email" class="form-label">Email (Optional)</label>
                                 <input type="email" class="form-control" id="email" name="email">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="delivery_time" class="form-label">Preferred Delivery Time</label>
-                                <select class="form-select" id="delivery_time" name="delivery_time">
-                                    <option value="">Select preferred time</option>
-                                    <option value="morning">Morning (9 AM - 12 PM)</option>
-                                    <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
-                                    <option value="evening">Evening (4 PM - 7 PM)</option>
-                                </select>
                             </div>
                         </div>
 
@@ -62,6 +58,12 @@
                                       placeholder="Any special instructions for delivery"></textarea>
                         </div>
 
+                        <div class="mb-3">
+                            <input type="hidden" name="payment_method" value="cod">
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-money-bill-wave"></i> Payment will be collected on delivery.
+                            </div>
+                        </div>
                         <div class="d-flex justify-content-between">
                             <a href="{{ url_for('cart') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left"></i> Back to Cart
@@ -113,35 +115,6 @@
                         </div>
                     </div>
 
-                    <!-- Payment Method -->
-                    <div class="mb-3">
-                        <h6>Payment Method:</h6>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
-                            <label class="form-check-label" for="cod">
-                                <i class="fas fa-money-bill-wave"></i> Cash on Delivery
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" id="upi" value="upi">
-                            <label class="form-check-label" for="upi">
-                                <i class="fas fa-mobile-alt"></i> UPI Payment
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" id="qr" value="qr">
-                            <label class="form-check-label" for="qr">
-                                <i class="fas fa-qrcode"></i> Scan & Pay (QR Code)
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Estimated Delivery -->
-                    <div class="alert alert-info">
-                        <h6><i class="fas fa-truck"></i> Estimated Delivery</h6>
-                        <p class="mb-0">Today within 4-6 hours</p>
-                        <small>Order before 12 PM for same day delivery</small>
-                    </div>
                 </div>
             </div>
 

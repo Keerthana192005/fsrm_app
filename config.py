@@ -2,7 +2,9 @@ import os
 from datetime import timedelta
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'farm_fresh_vegetables_secret_key_2024'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
+    if SECRET_KEY == 'dev-secret-key-change-in-production' and os.environ.get('FLASK_ENV') == 'production':
+        raise ValueError("SECRET_KEY environment variable must be set in production")
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///database.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = 'static/uploads'

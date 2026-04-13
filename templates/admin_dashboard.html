@@ -79,10 +79,10 @@
                         <a href="{{ url_for('admin_images') }}" class="nav-link">
                             <i class="fas fa-image"></i> Manage Images
                         </a>
-                        <a href="#" class="nav-link">
+                        <a href="{{ url_for('admin_reports') }}" class="nav-link">
                             <i class="fas fa-chart-bar"></i> Reports
                         </a>
-                        <a href="#" class="nav-link">
+                        <a href="{{ url_for('admin_customers') }}" class="nav-link">
                             <i class="fas fa-users"></i> Customers
                         </a>
                         <div class="btn-group">
@@ -159,7 +159,7 @@
                                 <div class="stat-icon bg-primary text-white">
                                     <i class="fas fa-comments"></i>
                                 </div>
-                                <h3>{{ feedbacks|length }}</h3>
+                                <h3>{{ total_feedbacks }}</h3>
                                 <p class="text-muted mb-0">Feedbacks</p>
                             </div>
                         </div>
@@ -226,6 +226,11 @@
                                     <div class="mb-3 pb-3 border-bottom">
                                         <h6 class="mb-1">{{ feedback.name }}</h6>
                                         <p class="small text-muted mb-1">{{ feedback.date.strftime('%d-%m-%Y %H:%M') }}</p>
+                                        <p class="mb-1">
+                                            {% for star in range(1, 6) %}
+                                            <i class="fas fa-star text-warning {% if star > feedback.rating %}text-muted{% endif %}"></i>
+                                            {% endfor %}
+                                        </p>
                                         <p class="small mb-0">{{ feedback.message[:100] }}{% if feedback.message|length > 100 %}...{% endif %}</p>
                                     </div>
                                     {% endfor %}
@@ -254,13 +259,13 @@
                                             </a>
                                         </div>
                                         <div class="col-md-3 mb-2">
-                                            <a href="#" class="btn btn-outline-success w-100">
+                                            <a href="{{ url_for('admin_reports') }}" class="btn btn-outline-success w-100">
                                                 <i class="fas fa-chart-bar"></i> View Reports
                                             </a>
                                         </div>
                                         <div class="col-md-3 mb-2">
-                                            <a href="#" class="btn btn-outline-success w-100">
-                                                <i class="fas fa-download"></i> Export Data
+                                            <a href="{{ url_for('admin_customers') }}" class="btn btn-outline-success w-100">
+                                                <i class="fas fa-users"></i> View Customers
                                             </a>
                                         </div>
                                     </div>

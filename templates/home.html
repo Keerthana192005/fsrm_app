@@ -59,7 +59,13 @@
             <div class="col-md-4 col-lg-3 mb-4 vegetable-item" data-name="{{ vegetable.name|lower }}" data-price="{{ vegetable.price }}" data-stock="{{ vegetable.stock }}">
                 <div class="card h-100 vegetable-card">
                     {% if vegetable.image %}
-                    <img src="{{ url_for('static', filename='uploads/' + vegetable.image) }}" class="card-img-top" alt="{{ vegetable.name }}">
+                    <img src="{{ url_for('static', filename='uploads/' + vegetable.image) }}" 
+                         class="card-img-top" 
+                         alt="{{ vegetable.name }}"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px; display: none;">
+                        <i class="fas fa-carrot fa-3x text-success"></i>
+                    </div>
                     {% else %}
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                         <i class="fas fa-carrot fa-3x text-success"></i>
@@ -136,43 +142,6 @@
                     <i class="fas fa-users fa-3x text-success mb-3"></i>
                     <h4>Student & Community Engagement</h4>
                     <p>Volunteering, internships, and live projects that build skills and foster innovation.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Current Crops & Practices Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5">Current Crops & Practices</h2>
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-success">Second Crop Cycle Includes</h5>
-                        <ul class="mt-3">
-                            <li>Tomatoes</li>
-                            <li>Brinjal</li>
-                            <li>Green leafy vegetables</li>
-                            <li>Beans</li>
-                            <li>Knol-khol (Nokol)</li>
-                            <li>Chillies</li>
-                            <li>Banana</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-success">Practices Adopted</h5>
-                        <ul class="mt-3">
-                            <li>Composting facility</li>
-                            <li>Drip irrigation system</li>
-                            <li>Organic pest control (Neem oil)</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>

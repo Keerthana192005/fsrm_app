@@ -82,41 +82,22 @@
         </div>
     </div>
 
-    <!-- Payment Verification Form -->
+    <!-- Confirm Payment -->
     <div class="row mt-4">
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-check-circle"></i> Payment Verification
+                        <i class="fas fa-check-circle"></i> Complete Your Order
                     </h5>
                 </div>
                 <div class="card-body">
+                    <p>Scan the QR code above with any UPI app and complete payment.</p>
+                    <p>Once payment is done, click the button below to finalize your order and return to the homepage.</p>
                     <form method="POST" action="{{ url_for('verify_qr_payment', order_id=order.id) }}">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="transaction_id" class="form-label">Transaction ID *</label>
-                                <input type="text" class="form-control" id="transaction_id" name="transaction_id" 
-                                       placeholder="Enter UPI transaction ID" required>
-                                <div class="form-text">After successful payment, enter the transaction ID from your UPI app</div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="upi_id" class="form-label">Your UPI ID</label>
-                                <input type="text" class="form-control" id="upi_id" name="upi_id" 
-                                       placeholder="your-upi@paytm" required>
-                                <div class="form-text">Enter the UPI ID you used for payment</div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="amount" class="form-label">Amount Paid *</label>
-                                <input type="number" class="form-control" id="amount" name="amount" 
-                                       value="{{ "%.2f"|format(cart_total) }}" step="0.01" required>
-                                <div class="form-text">Enter the exact amount you paid (₹{{ "%.2f"|format(cart_total) }})</div>
-                            </div>
-                        </div>
-                        
                         <div class="text-center mt-3">
                             <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-check"></i> Verify Payment & Complete Order
+                                <i class="fas fa-check"></i> I have paid, complete my order
                             </button>
                         </div>
                     </form>

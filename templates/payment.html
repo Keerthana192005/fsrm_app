@@ -80,18 +80,32 @@
                 <div class="card-body">
                     <form method="POST" action="{{ url_for('process_payment', order_id=order.id) }}">
                         <div class="row justify-content-center">
-                            <!-- PhonePe -->
-                            <div class="col-md-4 mb-3">
+                            <!-- UPI QR Code Payment -->
+                            <div class="col-md-6 mb-3">
                                 <div class="card h-100 border-success">
                                     <div class="card-body text-center">
-                                        <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
-                                        <h6>PhonePe</h6>
-                                        <p class="small text-muted">UPI Payment</p>
-                                        <a href="upi://pay?pa=7349784480@ibl&pn=SUMARAJ&mc=0000&mode=02&purpose=00&am={{ cart_total|round|int }}&cu=INR" 
+                                        <i class="fas fa-qrcode fa-3x text-success mb-3"></i>
+                                        <h6>UPI Payment</h6>
+                                        <p class="small text-muted">Scan QR code with any UPI app</p>
+                                        <a href="{{ url_for('qr_payment', order_id=order.id) }}" 
                                            class="btn btn-success" 
-                                           onclick="window.open(this.href, '_blank'); return false;">
-                                            Pay Now
+                                           rel="noopener noreferrer">
+                                            Generate QR Code
                                         </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cash on Delivery -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-money-bill-wave fa-3x text-warning mb-3"></i>
+                                        <h6>Cash on Delivery</h6>
+                                        <p class="small text-muted">Pay when you receive your order</p>
+                                        <button type="submit" name="payment_method" value="cod" class="btn btn-warning">
+                                            Pay on Delivery
+                                        </button>
                                     </div>
                                 </div>
                             </div>
